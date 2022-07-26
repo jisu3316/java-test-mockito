@@ -39,4 +39,7 @@ public class Study {
         this.status = StudyStatus.OPENED;
     }
 
+    public void setOwner(Member owner) {
+        this.owner = owner;
+    }
 }
