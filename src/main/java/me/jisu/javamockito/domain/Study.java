@@ -47,4 +47,17 @@ public class Study {
     public void setOwner(Member owner) {
         this.owner = owner;
     }
+
+    public LocalDateTime getOpenedDateTime() {
+        return openedDateTime;
+    }
+
+    public void open() {
+        this.openedDateTime = LocalDateTime.now();
+        this.status = StudyStatus.OPENED;
+    }
+
+    public StudyStatus getStatus() {
+        return status;
+    }
 }
