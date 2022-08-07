@@ -3,8 +3,10 @@ package me.jisu.javamockito.study;
 import me.jisu.javamockito.domain.Member;
 import me.jisu.javamockito.domain.Study;
 import me.jisu.javamockito.member.MemberService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -68,5 +70,100 @@ class StudyServiceTest {
 
     }
 
+    @DisplayName("Verify- times, never")
+    @Test
+    void createStudyService3() {
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        assertNotNull(studyService);
+
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("jisu@email.com");
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+
+        Study study = new Study(10, "테스트");
+        when(studyRepository.save(study)).thenReturn(study);
+
+        studyService.createNewStudy(1L, study);
+
+        assertEquals(member, study.getOwner());
+        verify(memberService, times(1)).notify(study);
+        verify(memberService, times(1)).notify(member);
+        verify(memberService, never()).validate(any());
+
+    }
+
+    @DisplayName("Verify - InOrder")
+    @Test
+    void createStudyService4() {
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        assertNotNull(studyService);
+
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("jisu@email.com");
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+
+        Study study = new Study(10, "테스트");
+        when(studyRepository.save(study)).thenReturn(study);
+
+        studyService.createNewStudy(1L, study);
+
+        assertEquals(member, study.getOwner());
+
+        InOrder inOrder = inOrder(memberService);
+        inOrder.verify(memberService).notify(study);
+        inOrder.verify(memberService).notify(member);
+    }
+
+    @DisplayName("Verify - verifyNoMoreInteractions")
+    @Test
+    void createStudyService5() {
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        assertNotNull(studyService);
+
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("jisu@email.com");
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+
+        Study study = new Study(10, "테스트");
+        when(studyRepository.save(study)).thenReturn(study);
+
+        studyService.createNewStudy(1L, study);
+
+        assertEquals(member, study.getOwner());
+        verify(memberService, times(1)).notify(study);
+        verifyNoMoreInteractions(memberService);
+    }
+
+    @DisplayName("BDD")
+    @Test
+    void createStudyService6() {
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        assertNotNull(studyService);
+
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("jisu@email.com");
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+
+        Study study = new Study(10, "테스트");
+        when(studyRepository.save(study)).thenReturn(study);
+
+        studyService.createNewStudy(1L, study);
+
+        assertEquals(member, study.getOwner());
+        verify(memberService, times(1)).notify(study);
+        verifyNoMoreInteractions(memberService);
+    }
 }
 

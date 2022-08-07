@@ -19,6 +19,11 @@ public class Study {
     private int limitCount;
     private String name;
     private LocalDateTime openedDateTime;
+
+    public Member getOwner() {
+        return owner;
+    }
+
     @ManyToOne
     private Member owner;
 
